@@ -27,7 +27,7 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(26, PIN, NEO_GRB + NEO_KHZ800);
 int s = 0;
 int z = 1;
 int colorCounter = 0;
-int colorState = 0;
+int colorState = 2;
 int stage = 0;
 int cycles = 0;
 bool goSleep = false;
@@ -107,26 +107,32 @@ void loop() {
   switch (stage) {
     case 0: 
     spiralChase(60);
+    nextColors();
     break;
     case 1: 
     circleChase(100);
+    nextColors();
     break;
     case 2:
-    theaterChase(strip.Color(127, 127, 127), 60); // White
+    drop(100);
+    nextColors();
     break;
     case 3:
-    theaterChase(strip.Color(127, 0, 0), 60); // Red
+    theaterChase(strip.Color(127, 127, 127), 60); // White
     break;
     case 4:
-    theaterChase(strip.Color(0, 127, 0), 60); // Blue
+    theaterChase(strip.Color(127, 0, 0), 60); // Red
     break;
     case 5:
-    rainbow(20);
+    theaterChase(strip.Color(0, 127, 0), 60); // Blue
     break;
     case 6:
-    rainbowCycle(30);
+    rainbow(20);
     break;
     case 7:
+    rainbowCycle(30);
+    break;
+    case 8:
     theaterChaseRainbow(70);
     break;}
   //when autocycle is true, the Stage variable is advanced each time a display function completes, mod 8 to keep it rolling back to the start
@@ -134,7 +140,7 @@ void loop() {
     //Serial.print("auto cycling!");
     //Serial.print(stage);
     //Serial.print("-");
-    stage = (stage + 1) % 8;
+    stage = (stage + 1) % 9;
     //Serial.println(stage);
       }
   //check encoder to see if it has changed
@@ -144,7 +150,7 @@ void loop() {
   last = value;
   //Serial.print("moving!");
   //Serial.println(value);
-  stage = value % 8;
+  stage = value % 9;
   }
 }
 
@@ -161,7 +167,6 @@ void colorWipe(uint32_t c, uint8_t wait) {
 
 void spiralChase(uint8_t wait) {
 for(uint8_t g=0; g<20; g++){
-  nextColors();
   for(s=0; s<8; s++) {
 
     for(uint16_t i=0; i<strip.numPixels(); i++) {
@@ -180,7 +185,6 @@ for(uint8_t g=0; g<20; g++){
 
 void circleChase(uint8_t wait) {
 for(uint8_t g=0; g<20; g++){
-  nextColors();
   for(s=0; s<8; s++) {
       for(uint16_t i=0; i<strip.numPixels(); i++) {
       strip.setPixelColor(i,theBackground);}
@@ -202,7 +206,24 @@ void flip(uint8_t wait) {
   }
 
 void drop(uint8_t wait) {
-  }
+for(uint8_t g=0; g<20; g++){
+  for (s=1; s<6; s++) {
+    for(int m=0; m<26; m++) {
+      strip.setPixelColor(m, theBackground);
+    }
+    if (s==1) {strip.setPixelColor(0,theColor);}
+    if (s==5) {strip.setPixelColor(24,theColor);}
+    if (s>1 && s<5) {
+      for(int q=1; q<9; q++) {
+        strip.setPixelColor(s*8-8+q, theColor);
+      }
+    }
+    strip.show();
+    delay(wait);
+    }
+   }
+}
+
 void rise(uint8_t wait) {
   }
 void randstar(uint8_t wait) {
