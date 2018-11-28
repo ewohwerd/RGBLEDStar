@@ -2,6 +2,8 @@ This is a project playing around with WS2812B LED Pixels (AKA NeoPixels) and an 
 Library Dependencies:
 ClickEncoder for Arduino: https://github.com/0xPIT/encoder/tree/arduino
 Adafruit Neopixel: https://github.com/adafruit/Adafruit_NeoPixel
+TimerOne: https://github.com/PaulStoffregen/TimerOne
+
 
 My pixels are weirdly aligned, because they're actually in a 25 point Moravian Star, aligned like this:
 
