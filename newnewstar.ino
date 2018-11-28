@@ -107,9 +107,11 @@ void loop() {
   switch (stage) {
     case 0: 
     spiralChase(60);
+    if (autoCycle == false) {nextColors();}
     break;
     case 1: 
     circleChase(100);
+    if (autoCycle == false) {nextColors();}
     break;
     case 2:
     rise(100);
