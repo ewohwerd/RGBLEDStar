@@ -5,11 +5,12 @@
   #include <avr/power.h>
 #endif
 
+// Pin 6 is the data feed to the pixels
 #define PIN 6
-
+//Init ClickEncoder
 ClickEncoder *encoder;
 int16_t last, value;
-
+//Init timer service
 void timerIsr() {
   encoder->service();
 }
@@ -22,6 +23,7 @@ void timerIsr() {
 //   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
 //   NEO_RGBW    Pixels are wired for RGBW bitstream (NeoPixel RGBW products)
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(26, PIN, NEO_GRB + NEO_KHZ800);
+//Set a ton of counting/tracking variables so my stringly random code can survive through main loop cycles
 int s = 0;
 int z = 1;
 int colorCounter = 0;
@@ -31,6 +33,7 @@ int cycles = 0;
 bool goSleep = false;
 bool sleepWait = false;
 bool autoCycle = true;
+//Most of my own display modes reference two colors, these are the initial values
 uint32_t theColor = strip.Color(255,255,255);
 uint32_t theBackground = strip.Color(0,0,0);
 
@@ -45,6 +48,8 @@ void setup() {
     if (F_CPU == 16000000) clock_prescale_set(clock_div_1);
   #endif
   // End of trinket special code
+
+  //Define Click encoder pins
   encoder = new ClickEncoder(A1, A0, A2);
 
   strip.begin();
@@ -58,14 +63,11 @@ void setup() {
 }
 
 void loop() {
-  // Some example procedures showing how to display to the pixels:
-//  colorWipe(strip.Color(255, 0, 0), 500); // Red
-//  colorWipe(strip.Color(0, 255, 0), 500); // Green
-//  colorWipe(strip.Color(0, 0, 255), 500); // Blue
-//determine if button held
+
+//start by determining if button is held
   ClickEncoder::Button b = encoder->getButton();
   if (b == ClickEncoder::Held) {
-        //Serial.println("Held!");
+       //Serial.println("Held!");
        //wake up if state is sleep and held
        if (goSleep == true) {
         goSleep = false;
@@ -101,7 +103,7 @@ void loop() {
   if (sleepWait == true) {
       sleepWait = false;
      }
-    
+  //do one of these. this switch defines which of the little display functions run and in what order. advance between modes is automatic by default, or input from rotary encoder advances
   switch (stage) {
     case 0: 
     spiralChase(60);
@@ -127,7 +129,7 @@ void loop() {
     case 7:
     theaterChaseRainbow(70);
     break;}
-  
+  //when autocycle is true, the Stage variable is advanced each time a display function completes, mod 8 to keep it rolling back to the start
   if (autoCycle == true) {
     //Serial.print("auto cycling!");
     //Serial.print(stage);
@@ -135,19 +137,18 @@ void loop() {
     stage = (stage + 1) % 8;
     //Serial.println(stage);
       }
+  //check encoder to see if it has changed
   value += encoder->getValue();
+  //if we aren't auto-cycling, increment stage by encoder change
   if (value != last && autoCycle == false) {
   last = value;
   //Serial.print("moving!");
   //Serial.println(value);
   stage = value % 8;
   }
-
-//strip.setPixelColor(0, strip.Color(255,255,255));
-//strip.show();
 }
 
-
+//That's it for the main loop. What follows are display functions, some used, some not, some completed, some not. Some of these are from the NeoPixel library example documentation, noted in readme
 
 // Fill the dots one after the other with a color
 void colorWipe(uint32_t c, uint8_t wait) {
@@ -175,7 +176,6 @@ for(uint8_t g=0; g<20; g++){
       delay(wait);
   }
 }
-stage = 1;
 }
 
 void circleChase(uint8_t wait) {
@@ -197,7 +197,6 @@ for(uint8_t g=0; g<20; g++){
       delay(wait);
   }
 }
-stage = 0;
 }
 void flip(uint8_t wait) {
   }
@@ -209,6 +208,7 @@ void rise(uint8_t wait) {
 void randstar(uint8_t wait) {
   }    
 
+//an attempt at some automated color changes within my functions
 void nextColors() {
   switch(colorState) {
     case 1:
@@ -250,9 +250,9 @@ uint32_t colorTable(uint8_t whichCase) {
 
   case 6:
   return strip.Color(255,0,255);
+ }
+ }
 
- }
- }
 void rainbow(uint8_t wait) {
   uint16_t i, j;
 
