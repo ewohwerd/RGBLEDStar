@@ -107,11 +107,9 @@ void loop() {
   switch (stage) {
     case 0: 
     spiralChase(60);
-    nextColors();
     break;
     case 1: 
     circleChase(100);
-    nextColors();
     break;
     case 2:
     rise(100);
@@ -127,13 +125,13 @@ void loop() {
     theaterChase(strip.Color(0, 127, 0), 60); // Blue
     break;
     case 6:
-    rainbow(20);
+    rainbow(10);
     break;
     case 7:
-    rainbowCycle(30);
+    rainbowCycle(20);
     break;
     case 8:
-    theaterChaseRainbow(70);
+    theaterChaseRainbow(60);
     break;}
   //when autocycle is true, the Stage variable is advanced each time a display function completes, mod 8 to keep it rolling back to the start
   if (autoCycle == true) {
@@ -244,7 +242,7 @@ void nextColors() {
     case 2:
       theColor = colorTable(colorCounter);
       theBackground = colorTable(colorCounter-1);
-      if (colorCounter > 10) {
+      if (colorCounter == 14) {
         colorCounter = 0;} else{
       colorCounter++;
         }
@@ -252,7 +250,6 @@ void nextColors() {
     }
   }
 uint32_t colorTable(uint8_t whichCase) {
- whichCase = whichCase % 6;
  switch(whichCase) {
   case 1:
   return strip.Color(255,0,0);
@@ -270,7 +267,31 @@ uint32_t colorTable(uint8_t whichCase) {
   return strip.Color(0,255,255);
 
   case 6:
-  return strip.Color(255,0,255);
+  return strip.Color(6,133,135);
+  
+  case 7:
+  return strip.Color(79,185,142);
+  
+  case 8:
+  return strip.Color(242,177,52);
+     
+  case 9:
+  return strip.Color(237,85,59);
+  
+  case 10:
+  return strip.Color(240,243,189);
+     
+  case 11:
+  return strip.Color(2,128,144);
+     
+  case 12:
+  return strip.Color(243,203,93);
+     
+  case 13:
+  return strip.Color(168,55,56);
+     
+  case 14:
+  return strip.Color(3,165,150);
  }
  }
 
@@ -290,7 +311,7 @@ void rainbow(uint8_t wait) {
 void rainbowCycle(uint8_t wait) {
   uint16_t i, j;
 
-  for(j=0; j<256*5; j++) { // 5 cycles of all colors on wheel
+  for(j=0; j<256*3; j++) { // 5 cycles of all colors on wheel
     for(i=0; i< strip.numPixels(); i++) {
       strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
     }
@@ -319,7 +340,7 @@ void theaterChase(uint32_t c, uint8_t wait) {
 
 //Theatre-style crawling lights with rainbow effect
 void theaterChaseRainbow(uint8_t wait) {
-  for (int j=0; j < 256; j++) {     // cycle all 256 colors in the wheel
+  for (int j=0; j < 256; j=j+2) {     // cycle all 256 colors in the wheel
     for (int q=0; q < 3; q++) {
       for (uint16_t i=0; i < strip.numPixels(); i=i+3) {
         strip.setPixelColor(i+q, Wheel( (i+j) % 255));    //turn every third pixel on
