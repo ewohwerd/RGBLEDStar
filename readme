@@ -1,0 +1,16 @@
+This is a project playing around with WS2812B LED Pixels (AKA NeoPixels) and an Arduino. The only other hardware being used is a rotary encoder with pushbutton.
+Library Dependencies:
+ClickEncoder for Arduino: https://github.com/0xPIT/encoder/tree/arduino
+Adafruit Neopixel: https://github.com/adafruit/Adafruit_NeoPixel
+
+My pixels are weirdly aligned, because they're actually in a 25 point Moravian Star, aligned like this:
+
+          |24|
+|17|18|19|20|21|22|23|24|            
+|09|10|11|12|13|14|15|16|  
+|01|02|03|04|05|06|07|08|      
+          |00|
+          
+Known issues: 
+My method for a software sleep mode is apparently crashing about 10 minutes in, meaning it's not working very well.
+There are a number of rough concepts I've mapped out in my head but not yet implemented.
