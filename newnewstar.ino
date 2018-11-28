@@ -114,7 +114,7 @@ void loop() {
     nextColors();
     break;
     case 2:
-    drop(100);
+    rise(100);
     nextColors();
     break;
     case 3:
@@ -205,7 +205,7 @@ for(uint8_t g=0; g<20; g++){
 void flip(uint8_t wait) {
   }
 
-void drop(uint8_t wait) {
+void rise(uint8_t wait) {
 for(uint8_t g=0; g<20; g++){
   for (s=1; s<6; s++) {
     for(int m=0; m<26; m++) {
@@ -213,7 +213,7 @@ for(uint8_t g=0; g<20; g++){
     }
     if (s==1) {strip.setPixelColor(0,theColor);}
     if (s==5) {strip.setPixelColor(24,theColor);}
-    if (s>1 && s<5) {
+    if (s>0 && s<5) {
       for(int q=1; q<9; q++) {
         strip.setPixelColor(s*8-8+q, theColor);
       }
@@ -224,7 +224,7 @@ for(uint8_t g=0; g<20; g++){
    }
 }
 
-void rise(uint8_t wait) {
+void drop(uint8_t wait) {
   }
 void randstar(uint8_t wait) {
   }    
