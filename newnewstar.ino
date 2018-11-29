@@ -106,41 +106,40 @@ void loop() {
   //do one of these. this switch defines which of the little display functions run and in what order. advance between modes is automatic by default, or input from rotary encoder advances
   switch (stage) {
     case 0: 
-    spiralChase(60);
-    if (autoCycle == false) {nextColors();}
+     spiralChase(60);
+      if (autoCycle == false) {nextColors();}
     break;
     case 1: 
-    circleChase(100);
-    if (autoCycle == false) {nextColors();}
+      circleChase(100);
+      if (autoCycle == false) {nextColors();}
     break;
     case 2:
-    rise(100);
-    nextColors();
+      rise(100);
+      if (autoCycle == false) {nextColors();}
     break;
     case 3:
-    theaterChase(strip.Color(127, 127, 127), 60); // White
+      drop(100);
+      if (autoCycle == false) {nextColors();}
     break;
     case 4:
-    theaterChase(strip.Color(127, 0, 0), 60); // Red
+     theaterChase(theColor, 60);
+      nextColors();
     break;
     case 5:
-    theaterChase(strip.Color(0, 127, 0), 60); // Blue
+      rainbow(10);
     break;
     case 6:
-    rainbow(10);
+      rainbowCycle(20);
     break;
     case 7:
-    rainbowCycle(20);
-    break;
-    case 8:
-    theaterChaseRainbow(60);
+      theaterChaseRainbow(60);
     break;}
   //when autocycle is true, the Stage variable is advanced each time a display function completes, mod 8 to keep it rolling back to the start
   if (autoCycle == true) {
     //Serial.print("auto cycling!");
     //Serial.print(stage);
     //Serial.print("-");
-    stage = (stage + 1) % 9;
+    stage = (stage + 1) % 8;
     //Serial.println(stage);
       }
   //check encoder to see if it has changed
@@ -150,7 +149,7 @@ void loop() {
   last = value;
   //Serial.print("moving!");
   //Serial.println(value);
-  stage = value % 9;
+  stage = value % 8;
   }
 }
 
@@ -225,6 +224,22 @@ for(uint8_t g=0; g<20; g++){
 }
 
 void drop(uint8_t wait) {
+  for(uint8_t g=0; g<20; g++){
+  for (s=5; s>0; s--) {
+    for(int m=0; m<26; m++) {
+      strip.setPixelColor(m, theBackground);
+    }
+    if (s==1) {strip.setPixelColor(0,theColor);}
+    if (s==5) {strip.setPixelColor(24,theColor);}
+    if (s>0 && s<5) {
+      for(int q=1; q<9; q++) {
+        strip.setPixelColor(s*8-8+q, theColor);
+      }
+    }
+    strip.show();
+    delay(wait);
+    }
+   }
   }
 void randstar(uint8_t wait) {
   }    
@@ -324,7 +339,7 @@ void rainbowCycle(uint8_t wait) {
 
 //Theatre-style crawling lights.
 void theaterChase(uint32_t c, uint8_t wait) {
-  for (int j=0; j<10; j++) {  //do 10 cycles of chasing
+  for (int j=0; j<20; j++) {  //do 10 cycles of chasing
     for (int q=0; q < 3; q++) {
       for (uint16_t i=0; i < strip.numPixels(); i=i+3) {
         strip.setPixelColor(i+q, c);    //turn every third pixel on
