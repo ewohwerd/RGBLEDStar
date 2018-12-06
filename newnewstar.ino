@@ -211,7 +211,7 @@ for(uint8_t g=0; g<20; g++){
       strip.setPixelColor(m, theBackground);
     }
     if (s==1) {strip.setPixelColor(0,theColor);}
-    if (s==5) {strip.setPixelColor(24,theColor);}
+    if (s==5) {strip.setPixelColor(25,theColor);}
     if (s>0 && s<5) {
       for(int q=1; q<9; q++) {
         strip.setPixelColor(s*8-8+q, theColor);
@@ -230,7 +230,7 @@ void drop(uint8_t wait) {
       strip.setPixelColor(m, theBackground);
     }
     if (s==1) {strip.setPixelColor(0,theColor);}
-    if (s==5) {strip.setPixelColor(24,theColor);}
+    if (s==5) {strip.setPixelColor(25,theColor);}
     if (s>0 && s<5) {
       for(int q=1; q<9; q++) {
         strip.setPixelColor(s*8-8+q, theColor);
@@ -258,7 +258,7 @@ void nextColors() {
       break;
     case 2:
       theColor = colorTable(colorCounter);
-      theBackground = colorTable(colorCounter-1);
+      theBackground = colorTable(max(colorCounter-1,0));
       if (colorCounter == 14) {
         colorCounter = 0;} else{
       colorCounter++;
